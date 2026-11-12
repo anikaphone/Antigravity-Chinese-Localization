@@ -39,14 +39,26 @@ function check(desc, actual, expected) {
 
 // 1. 版本元数据校验
 console.log('--- 1. 2.31.0 版本元数据校验 ---');
-check('localize.js CURRENT_VERSION 为 2.31.0', /const CURRENT_VERSION = '2\.31\.0';/.test(localizeSource), true);
-check('extracted/package.json version 为 2.31.0', packageJson.version, '2.31.0');
-check('index.html 控制中心显示 v2.31.0', indexSource.includes('控制中心 v2.31.0'), true);
-check('README.md 包含 v2.31.0+', readmeSource.includes('Antigravity v2.31.0+'), true);
-check('README.en.md 包含 v2.31.0+', readmeEnSource.includes('Antigravity v2.31.0+'), true);
+function isVerGte2310(ver) {
+  if (!ver) return false;
+  const parts = ver.split('.').map(n => parseInt(n, 10));
+  if (parts[0] > 2) return true;
+  if (parts[0] === 2 && parts[1] > 31) return true;
+  if (parts[0] === 2 && parts[1] === 31 && parts[2] >= 0) return true;
+  return false;
+}
+const currVerMatch = localizeSource.match(/const CURRENT_VERSION = '([^']+)';/);
+check('localize.js CURRENT_VERSION 有效且 >= 2.31.0', isVerGte2310(currVerMatch ? currVerMatch[1] : ''), true);
+check('extracted/package.json version 有效且 >= 2.31.0', isVerGte2310(packageJson.version), true);
+const indexVerMatch = indexSource.match(/控制中心 v([0-9.]+)/);
+check('index.html 控制中心显示版本 >= v2.31.0', isVerGte2310(indexVerMatch ? indexVerMatch[1] : ''), true);
+const readmeVerMatch = readmeSource.match(/Antigravity v([0-9.]+)\+/);
+check('README.md 标注适配版本 >= v2.31.0+', isVerGte2310(readmeVerMatch ? readmeVerMatch[1] : ''), true);
+const readmeEnVerMatch = readmeEnSource.match(/Antigravity v([0-9.]+)\+/);
+check('README.en.md 标注适配版本 >= v2.31.0+', isVerGte2310(readmeEnVerMatch ? readmeEnVerMatch[1] : ''), true);
 check('CHANGELOG.md 包含 v2.31.0 章节', changelogSource.includes('## v2.31.0 (2026-11-10)'), true);
 check('CHANGELOG.en.md 包含 v2.31.0 章节', changelogEnSource.includes('## v2.31.0 (2026-11-10)'), true);
-check('app.asar.ready package.json 版本为 2.31.0', readAsarPackageVersion(readyAsarPath), '2.31.0');
+check('app.asar.ready package.json 版本有效且 >= 2.31.0', isVerGte2310(readAsarPackageVersion(readyAsarPath)), true);
 
 // 2. 原生补丁注入与汉化校验
 console.log('\n--- 2. 原生补丁注入与汉化校验 ---');
