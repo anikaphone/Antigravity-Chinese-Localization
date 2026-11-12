@@ -5277,6 +5277,61 @@ installCustomFlagOverridesSync();
     "Zoho Desk plugin for Antigravity. Review, prioritize, and update Zoho Desk tickets directly from Antigravity through Zoho Desk MCP and includes a Ticket Prioritization Agent for triage and priority updates.": "Zoho Desk 的 Antigravity 插件。通过 Zoho Desk MCP 在 Antigravity 中直接查看、调整优先级并更新工单，并内置用于工单分流与优先级更新的工单定级智能体。",
     "Connect Zoho Projects to Antigravity to turn tasks and issues into working code. Access project context, investigate bugs, and update work items as you develop.": "将 Zoho Projects 连接到 Antigravity，将任务与缺陷直接转化为可运行的代码。在开发过程中无缝获取项目上下文、调查 Bug 并更新工作项状态。",
     "Run Zoho Books from Antigravity: invoicing, bills, banking, journals, projects, items, taxes, customization and automation.": "在 Antigravity 中高效运行 Zoho Books：发票管理、账单、银行对账、日记账、项目核算、商品、税务设置、定制化与财务自动化。",
+
+    // ===== 2.31.2 补充：协调器、浏览器下载审批、授权码登录与新版交互词条 =====
+    "Code Preview": "代码预览",
+    "Download files": "下载文件",
+    "Allow/deny agent browser file downloads from specific sites.": "允许/禁止智能体从特定站点下载浏览器文件。",
+    "Allow the browser agent to download a file?": "允许浏览器智能体下载文件吗？",
+    "Yes, allow this download": "是，允许此次下载",
+    "These allowed domain rules are set by your organization's administrator and cannot be removed.": "这些允许的域名规则由你所在组织的管理员设置，无法移除。",
+    "Coordinators": "协调器",
+    "No coordinators": "暂无协调器",
+    "New Coordinator": "新建协调器",
+    "New coordinator": "新建协调器",
+    "Create Coordinator": "创建协调器",
+    "Coordinator name": "协调器名称",
+    "Coordinator goal": "协调器目标",
+    "Coordinator settings": "协调器设置",
+    "What should this coordinator accomplish?": "此协调器需要完成什么目标？",
+    "e.g. Release helper": "例如：发版助手",
+    "Choose icon and color": "选择图标与颜色",
+    "Couldn't create the coordinator. Try again.": "无法创建协调器，请重试。",
+    "Couldn't start the coordinator:": "无法启动协调器：",
+    "You can follow the workers in the Dashboard, and I'll post an update when something finishes or needs you.": "你可以在仪表板中跟进各工作智能体的进度，任务完成或需要你处理时我会发布更新。",
+    "No swarm in this conversation": "此对话中暂无集群协作",
+    "Project location": "项目位置",
+    "Create a project on this computer or remotely.": "在本机或远程创建项目。",
+    "Use Existing": "使用现有项",
+    "Toggle Google Cloud projects": "切换 Google Cloud 项目列表",
+    "Summarizing call…": "正在总结通话…",
+    "Summarizing call...": "正在总结通话...",
+    "Trouble signing in? Enter authorization code": "登录遇到问题？输入授权码",
+    "Authorization code": "授权码",
+    "Paste authorization code": "粘贴授权码",
+    "Submit code": "提交授权码",
+    "Sign in in your browser, then paste the authorization code shown on the callback page.": "请在浏览器中完成登录，然后粘贴回调页面上显示的授权码。",
+    "Authorization code was rejected. Paste a fresh code and try again.": "授权码被拒绝，请粘贴新的授权码后重试。",
+    "Authorization code sign-in is unavailable in this version.": "当前版本不支持使用授权码登录。",
+    "Switched to authorization code sign-in": "已切换为授权码登录",
+    "Sign-in didn't finish. Try again.": "登录未完成，请重试。",
+    "Account connection was not completed.": "账号连接未完成。",
+    "Needs your approval": "需要你的批准",
+    "Waiting for your approval": "等待你的批准",
+    "Waiting for your answer": "等待你的回答",
+    "Plan upgrade required": "需要升级订阅方案",
+    "Failed to export artifact": "导出构件失败",
+    "Network error. Check your connection and try again.": "网络错误，请检查网络连接后重试。",
+    "Something went wrong.": "出了点问题。",
+    "Hey there, what should we build today?": "嗨，今天我们要构建什么？",
+    "Welcome back. Where should we pick up?": "欢迎回来，我们要从哪里继续？",
+    "Good to see you. What's next?": "很高兴见到你，接下来做什么？",
+    "Commented on:": "已评论：",
+    "Commented on: ": "已评论：",
+    "You said": "你说",
+    "Agent working": "智能体处理中",
+    "Agent said": "智能体说",
+    "Ask /btw": "使用 /btw 提问",
   };
 
   const coreWords = {
@@ -5517,6 +5572,51 @@ installCustomFlagOverridesSync();
       return text.replace(trimmed, fixed);
     }
 
+    // ===== 2.31.2 浏览器下载域名审批、主题对比度警告与个性化问候语动态匹配 =====
+    if (/^Yes,\s+allow\s+downloads\s+from\s+(.+)\s+for\s+this\s+run$/i.test(trimmed)) {
+      const fixed = trimmed.replace(/^Yes,\s+allow\s+downloads\s+from\s+(.+)\s+for\s+this\s+run$/i, (_m, domain) => '是，本次运行允许从 ' + domain + ' 下载');
+      if (stringCache.size < MAX_STRING_CACHE) stringCache.set(trimmed, fixed);
+      return text.replace(trimmed, () => fixed);
+    }
+
+    if (/^Yes,\s+allow\s+downloads\s+from\s+(.+)\s+in\s+this\s+conversation$/i.test(trimmed)) {
+      const fixed = trimmed.replace(/^Yes,\s+allow\s+downloads\s+from\s+(.+)\s+in\s+this\s+conversation$/i, (_m, domain) => '是，在此对话中允许从 ' + domain + ' 下载');
+      if (stringCache.size < MAX_STRING_CACHE) stringCache.set(trimmed, fixed);
+      return text.replace(trimmed, () => fixed);
+    }
+
+    if (/^Yes,\s+always\s+allow\s+downloads\s+from\s+(.+)$/i.test(trimmed)) {
+      const fixed = trimmed.replace(/^Yes,\s+always\s+allow\s+downloads\s+from\s+(.+)$/i, (_m, domain) => '是，始终允许从 ' + domain + ' 下载');
+      if (stringCache.size < MAX_STRING_CACHE) stringCache.set(trimmed, fixed);
+      return text.replace(trimmed, () => fixed);
+    }
+
+    if (/^Low\s+contrast\s+ratio\s*\(([^)]+):1\)\.\s*Text\s+may\s+be\s+hard\s+to\s+read\.?$/i.test(trimmed)) {
+      const fixed = trimmed.replace(/^Low\s+contrast\s+ratio\s*\(([^)]+):1\)\.\s*Text\s+may\s+be\s+hard\s+to\s+read\.?$/i, (_m, ratio) => '对比度过低 (' + ratio + ':1)，文本可能难以阅读。');
+      if (stringCache.size < MAX_STRING_CACHE) stringCache.set(trimmed, fixed);
+      return text.replace(trimmed, () => fixed);
+    }
+
+    if (/^Hey\s+(.+),\s*what\s+should\s+we\s+build\s+today\?$/i.test(trimmed)) {
+      const fixed = trimmed.replace(/^Hey\s+(.+),\s*what\s+should\s+we\s+build\s+today\?$/i, (_m, name) => (
+        name.trim().toLowerCase() === 'there' ? '嗨，今天我们要构建什么？' : '嗨 ' + name.trim() + '，今天我们要构建什么？'
+      ));
+      if (stringCache.size < MAX_STRING_CACHE) stringCache.set(trimmed, fixed);
+      return text.replace(trimmed, () => fixed);
+    }
+
+    if (/^Welcome\s+back,\s*(.+)\.\s*Where\s+should\s+we\s+pick\s+up\?$/i.test(trimmed)) {
+      const fixed = trimmed.replace(/^Welcome\s+back,\s*(.+)\.\s*Where\s+should\s+we\s+pick\s+up\?$/i, (_m, name) => '欢迎回来，' + name.trim() + '。我们要从哪里继续？');
+      if (stringCache.size < MAX_STRING_CACHE) stringCache.set(trimmed, fixed);
+      return text.replace(trimmed, () => fixed);
+    }
+
+    if (/^Good\s+to\s+see\s+you,\s*(.+)\.\s*What's\s+next\?$/i.test(trimmed)) {
+      const fixed = trimmed.replace(/^Good\s+to\s+see\s+you,\s*(.+)\.\s*What's\s+next\?$/i, (_m, name) => '很高兴见到你，' + name.trim() + '。接下来做什么？');
+      if (stringCache.size < MAX_STRING_CACHE) stringCache.set(trimmed, fixed);
+      return text.replace(trimmed, () => fixed);
+    }
+
     // ===== 2.30.0 语音选择器与过滤菜单动态保障 =====
     if (/^Auto\s+Pin$/i.test(trimmed)) {
       const fixed = '自动置顶';
@@ -5530,7 +5630,7 @@ installCustomFlagOverridesSync();
       return text.replace(trimmed, fixed);
     }
 
-    if (/^Use\s+([A-Za-z0-9_-]+)$/i.test(trimmed)) {
+    if (!lowerDictionary.has(trimmed.toLowerCase()) && /^Use\s+([A-Za-z0-9_-]+)$/i.test(trimmed)) {
       const fixed = trimmed.replace(/^Use\s+([A-Za-z0-9_-]+)$/i, '使用 $1');
       if (stringCache.size < MAX_STRING_CACHE) stringCache.set(trimmed, fixed);
       return text.replace(trimmed, fixed);

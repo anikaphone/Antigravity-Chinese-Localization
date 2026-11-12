@@ -4,6 +4,24 @@ This document tracks all version releases, core architecture adaptations, and fe
 
 ---
 
+## v2.31.2 (2026-11-12)
+
+### 1. Comprehensive Deep Adaptation for Antigravity v2.31.2 (Windows FileVersion `2.31.2.0`)
+- **Seamless Official Version Upgrade**: Synchronized with the official `2.31.2` release (displayed as `2.31.2.0` in Windows PE headers, with canonical semver `2.31.2` in `package.json`), updating `localize.js`, `extracted/package.json`, Control Center UI, and documentation metadata to `2.31.2`.
+- **100% Native & Embedded Renderer Compatibility**: Unpacked and verified official `2.31.2` `app.asar` and `language_server` embedded frontend assets; all 14 patched native modules and 50+ native patch points hit cleanly with zero regressions.
+
+### 2. Deep Localization for New 2.31.x Web UI Modules & Dynamic Patterns
+- **Multi-Agent Coordinators & Swarm Board**: Translated the full Coordinator creation flow, goal/settings fields, icon & color picker, error states, and swarm empty-state hints.
+- **Browser Agent File Download Approvals & Policies**: Localized Settings "Download files" domain rules, organization administrator lock notices, download confirmation prompts, and dynamic domain-scoped approval actions (for this run / in this conversation / always allow).
+- **Authorization Code Sign-in Fallback**: Translated manual authorization code entry, browser callback instructions, rejection retry alerts, and account connection status messages.
+- **Project Location, Call Summary & Personalized Greetings**: Added translations for Project location wizard, Google Cloud project list toggle, Gemini Live "Summarizing call…", theme "Code Preview" & dynamic low-contrast ratio warnings, approval status badges, and personalized home greetings.
+
+### 3. Build & Test Guarantee
+- **Latest Precompiled Asar**: Re-injected and packaged `app.asar.ready` for `2.31.2`, supporting atomic hot-replacement and automatic post-update restoration.
+- **100% Green TDD Test Suite**: Added Ticket-35 test suite (`2.31.2` metadata, new dictionary & dynamic regex assertions, zero duplicate-key regression, and artifact verification); all 38 test suites pass.
+
+---
+
 ## v2.31.0 (2026-11-10)
 
 ### 1. Comprehensive Deep Adaptation for Antigravity v2.31.0 Official Major Release
